@@ -28,6 +28,12 @@ typedef vector<dd> vdd;
 #define inf 1000000000
 #define eps 1e-9
 
+// make graph of of 1 ... n
+// i has an edge to j if i has to be before j, so if i
+// came before j in more than k / 2 of cases then there is an edge from i to j
+// skip the case that k is even and i has been before j in exactly k / 2 of cases (why? think :))
+// use topological sort to create the answer.
+
 int main() {
     ios::sync_with_stdio(0);
 
@@ -94,16 +100,6 @@ int main() {
             cout << endl;
         }
     }
-
-    // kahn's alg for finding a valid topological sort.
-    // in TopSort 'u' comes before 'v' if edge u -> v exists in DAG.
-
-    // n is number of vertexes. indegree stores number of incoming edges to i'th
-    // vertex.
-    // fill n and indegree before defination of priority_queue.
-    // ts holds the Topsort
-
-    // calculate indegree before running alg.
-
+    
     return 0;
 }
