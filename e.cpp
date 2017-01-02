@@ -28,6 +28,11 @@ typedef vector<dd> vdd;
 #define inf 1000000000
 #define eps 1e-9
 
+// make an even type of mobius strip, cut it and see its type will not change.
+// make some even type of mobius strip like 1 and 3 and see that when you
+// cut it 1 become 4 and 3 become strip type of 8 ---> fomula is n * 2 + 2
+// after knowing the formula, rest of problem is easy :)
+
 int main() {
     ios::sync_with_stdio(0);
     int a, b;
