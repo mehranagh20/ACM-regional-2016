@@ -28,20 +28,14 @@ typedef vector<dd> vdd;
 #define inf 1000000000
 #define eps 1e-9
 
-// to find minimum cut, run flow, the max flow is the value of minimum cut, to find edges
-// we put all reachable vertexes from source with positive weight to S components and all others to C
-// all edges connecting S vertexes to C are in minimum edges vertexes set.
+// solution :
+// find all absolutly distinct paths from source to destination, let it be w.
+// send t / w cars from each path to des.
 
-// Dinic network max flow algorithm, runs in O(V^2*E) time.
-// efficient for graph with lots of edges.
-// if verteces have capacity as well as edges, simply devide each vertex to two vertex with an edge between them
-// equal to capacity of the vertex
 
 vi dist, work;
-int s, t, n; //fill s, t, n in main ---> s is start, t is destination and n is number of nodes in graph.
-vvi rem, graph; //fill graph in main. graph is adjList. also fill rem where it keeps capacity of edjes in n * n space.
-//it is possible to use rem to construct the path. if there was a path from i to j then rem[j][i] > 0
-//if rem[j][i] = 0 before running Dinic's so it can change with questions...
+int s, t, n;
+vvi rem, graph;
 
 bool dinic_bfs() {
     dist.clear(); dist.resize(n, -1); dist[s] = 0;
