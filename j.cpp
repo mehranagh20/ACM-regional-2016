@@ -79,6 +79,7 @@ int maxFlow() {
 
 int main()
 {
+    ios::sync_with_stdio(0);
     int e, d, tt;
     while(cin >> n >> e >> s >> d >> tt && (n || e || s || d || tt)) {
         t = d;
