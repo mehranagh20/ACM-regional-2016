@@ -34,9 +34,9 @@ typedef vector<dd> vdd;
 // fill AdjList with the graph before running tarjanSCC alg.
 
 vi dfs_num, dfs_low, S, visited, nodesSccNum;
-vvi scc, revGraph;
+vvi scc;
 int dfsNumberCounter, numSCC;
-vvii AdjList;
+vvii AdjList, revGraph;
 
 void tarjanSCC(int u) {
     dfs_low[u] = dfs_num[u] = dfsNumberCounter++; // dfs_low[u] <= dfs_num[u]
@@ -56,10 +56,10 @@ void tarjanSCC(int u) {
             if (u == v) break; }
     } }
 
-void dfs(vi &vis, int i) {
+void dfs(vi &vis, int i, vvii &graph) {
     vis[i] = 1;
-    for(auto &e : revGraph[i]) if(!vis[e])
-        dfs(vis, e);
+    for(auto &e : graph[i]) if(!vis[e.first])
+        dfs(vis, e.first, graph);
 }
 
 // inside int main()
@@ -67,19 +67,19 @@ void dfs(vi &vis, int i) {
 // from that node to nodes to the same SCC, if there is then if just a single one comes to this SCC then
 // it cause switches in this SCC to have infinite memory(hard to explain why, think about it :)) so every node that can send info to this SCC
 // counts as answer(found by dfs)
-// there is a special case were two adjacent SCC make memory of some switches infinite, i marked code that check this special case.
+// there is a special case were two different SCC make memory of some switches infinite, i marked code that check this special case.
 
 int main() {
     ios::sync_with_stdio(0);
     int n, m;
     while(cin >> n >> m && (n || m)) {
-        AdjList.assign(n, vii()), revGraph.assign(n, vi());
+        AdjList.assign(n, vii()), revGraph.assign(n, vii());
         nodesSccNum.assign(n, 0);
         scc.assign(n + 10, vi());
         for(int i = 0; i < m; i++) {
             int a, b; cin >> a >> b;
             a--, b--;
-            AdjList[a].push_back(ii(b, 0)), revGraph[b].push_back(a);
+            AdjList[a].push_back(ii(b, 0)), revGraph[b].push_back(ii(a, 0));
         }
         dfs_num.assign(n, 0); dfs_low.assign(n, 0); visited.assign(n, 0);
         dfsNumberCounter = numSCC = 0;
@@ -93,14 +93,17 @@ int main() {
                 for(auto &u : AdjList[ee])
                     num += (nodesSccNum[u.first] == nodesSccNum[ee]);
                 if(num > 1) {
-                    dfs(availables, e[0]);
+                    dfs(availables, e[0], revGraph);
                     break;
                 }
                 // special case, two different SCC, one cause another to have infinite memory
                 else if(e.size() > 1) {
-                    for(auto &u : revGraph[ee]) if((nodesSccNum[u] != nodesSccNum[ee]) && scc[nodesSccNum[u]].size() > 1) {
-                        dfs(availables, u);
-                    }
+                    vi tempVis(n, 0);
+                    dfs(tempVis, e[0], revGraph);
+                    for(auto &otherSccs : scc) if(otherSccs.size() > 1 && otherSccs != e) // > 1 means it can hold the one for ever.
+                        if(tempVis[otherSccs[0]])
+                            dfs(availables, otherSccs[0], revGraph); // found a scc that can cause this scc e to have infinite memory
+                                                                    // so everty node that can reach that scc can cause this scc e to have infinite memory.
                 }
             }
         }
